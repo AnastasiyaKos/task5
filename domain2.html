@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<br>message data:<div id="receivedMsg"></div>
+<br>message origin:<div id="src"></div>
+<br>Local Storage:<div id="localStorage"></div>
+
+<script>
+    function handlingMsg(e) {
+        let receivedMsg = document.getElementById('receivedMsg');
+        let src = document.getElementById('src');
+        let iframeLocalStorage = document.getElementById('localStorage');
+
+        let payload = JSON.parse(e.data);
+
+        switch (payload.action) {
+            case 'send':
+                receivedMsg.value = localStorage.setItem('receivedMsg', payload.data);
+                src.innerHTML = e.origin;
+                receivedMsg.innerHTML = payload.data;
+                iframeLocalStorage.innerHTML = '';
+
+
+                break;
+
+            case 'delete':
+                localStorage.removeItem('receivedMsg');
+                receivedMsg.innerHTML = '';
+
+                break;
+
+            case 'read':
+                iframeLocalStorage.innerHTML = localStorage.getItem('receivedMsg');
+
+                break;
+        }
+    }
+
+    function alertData() {
+        setTimeout(
+            () => alert(localStorage.getItem('receivedMsg')), 100);
+    }
+
+    addEventListener('message', handlingMsg, true);
+
+
+</script>
+</body>
+</html>

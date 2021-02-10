@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input type="text" id="msg"/>
+<button id="send">Send data</button>
+<button id="delete">Delete this data</button>
+<button id="read">Read iframe Local Storage</button>
+
+<h1>iframe:</h1>
+<iframe id="domainTwo" src="./domain2.html" height="300px" width="500px"></iframe>
+
+<script>
+    document.getElementById('send').addEventListener('click', sendMsg, true);
+    document.getElementById('delete').addEventListener('click', deleteData, true);
+    document.getElementById('read').addEventListener('click', readLocalStorage, true);
+
+    const win = document.getElementById('domainTwo').contentWindow;
+
+    function sendMsg() {
+        let text = document.getElementById('msg').value;
+        let data = JSON.stringify({
+            action: 'send',
+            data: text,
+        })
+        win.postMessage(data, '*');
+        document.getElementById('msg').value = '';
+        win.alertData();
+    }
+
+    function deleteData() {
+        let data = JSON.stringify({
+            action: 'delete'
+        })
+        win.postMessage(data, '*');
+        win.alertData();
+    }
+
+    function readLocalStorage() {
+        let data = JSON.stringify({
+            action: 'read'
+        })
+        win.postMessage(data, '*');
+        win.alertData();
+    }
+</script>
+</body>
+</html>
